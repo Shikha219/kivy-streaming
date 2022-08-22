@@ -5,16 +5,10 @@ from kivymd.app import MDApp
 from kivy.lang import Builder
 from kivy.core.window import Window
 
-from cvcamera import CvCamera
-
-
-from kivy.app import App
-from kivy.uix.widget import Widget
-from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.image import Image
 from kivy.clock import Clock
 from kivy.graphics.texture import Texture
-import cv2
+import cv2 as cv
 
 Window.size = (310, 580)
 
@@ -26,7 +20,6 @@ ScreenManager:
     SignupScreen:
     DashboardScreen:
     HomeScreen:
-    PreviewScreen:
     Preview2Screen:
     
     
@@ -180,6 +173,8 @@ ScreenManager:
         font_name: "BPoppins"
         on_release:
             app.camera_setup(uname.text,password.text,ipaddress.text)
+            
+            
 
 
         canvas.before:
@@ -472,31 +467,13 @@ ScreenManager:
             root.manager.transition.direction = "left"
             root.manager.current = "login"
             
-<PreviewScreen>:
-    name:"preview"
-    MDLabel:
-        id: rtsp_link
-        text: "RTSP Link"
-        font_name: "BPoppins"
-        font_size: "13sp"
-        halign: "center"
-        pos_hint: {"center_y":.16}
-        color: rgba(135,133,193,255)
-        
-    BoxLayout:
-        Image:
-            id: img2
+
             
 <Preview2Screen>:
     name: "preview2"
     BoxLayout:
-        orientation: 'vertical'
-        Image:
-            id: img1
-            size_hint: 1.0, 0.7
-        BoxLayout:
-            orientation: 'horizontal'
-            size_hint: 1.0, 0.1
+        Cam:
+            id: cam1
 
 
         '''
@@ -512,8 +489,8 @@ class SignupScreen(Screen):
 class HomeScreen(Screen):
     pass
 
-class PreviewScreen(Screen):
-    pass
+# class PreviewScreen(Screen):
+#     pass
 
 class Preview2Screen(Screen):
     pass
@@ -523,9 +500,32 @@ screen_manager.add_widget(MainScreen(name = 'main'))
 screen_manager.add_widget(LoginScreen(name = 'login'))
 screen_manager.add_widget(SignupScreen(name = 'signup'))
 screen_manager.add_widget(DashboardScreen(name = 'dashboard'))
-screen_manager.add_widget(PreviewScreen(name = 'preview'))
+# screen_manager.add_widget(PreviewScreen(name = 'preview'))
 screen_manager.add_widget(Preview2Screen(name = 'preview2'))
 
+class Cam(Image):
+
+    def on_kv_post(self, base_widget):
+        self.capture = cv.VideoCapture(0)
+        # cv.namedWindow("CV2 Image")
+        Clock.schedule_interval(self.update, 1.0 / 33.0)
+
+    def update(self, dt):
+        # display image from cam in opencv window
+        ret, frame = self.capture.read()
+        # cv.imshow("CV2 Image", frame)
+
+        # convert it to texture
+        adaptive_thresh = frame
+
+        buf1 = cv.flip(adaptive_thresh, 0)
+        buf = buf1.tobytes()
+        texture1 = Texture.create(size=(adaptive_thresh.shape[1], adaptive_thresh.shape[0]),
+                                  )  # in grayscale gibts kein bgr
+        # if working on RASPBERRY PI, use colorfmt='rgba' here instead, but stick with "bgr" in blit_buffer.
+        texture1.blit_buffer(buf, colorfmt='bgr')  # replacing texture
+        # display image from the texture
+        self.texture = texture1
 
 
 
@@ -617,30 +617,13 @@ class Slope(MDApp):
         # self.camera_util(link)
 
         self.strng.get_screen('preview2').manager.current = 'preview2'
-        self.check()
 
-        return ''
-
-    def check(self):
-        self._cap = cv2.VideoCapture(0)
-
-        # layout = Builder.load_string()
-
-        while not self._cap.isOpened():
-            pass
-
-        Clock.schedule_interval(self.update, 1.0 / 30.0)
 
         return ''
 
 
-    def update(self, dt):
-        ret, img = self._cap.read()
-        img = cv2.flip(img, 0)
-        texture1 = Texture.create(size=(img.shape[1], img.shape[0]), colorfmt='bgr')
-        texture1.blit_buffer(img.tostring(), colorfmt='bgr', bufferfmt='ubyte')
-        # Clock.schedule_interval(self.root.img1.texture, 1 / 60.)
-        self.root.ids.img1.texture = texture1
+
+
 
 
 
