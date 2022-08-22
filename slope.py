@@ -474,6 +474,14 @@ ScreenManager:
     BoxLayout:
         Cam:
             id: cam1
+    MDLabel:
+        id: rtsp_link
+        text: "RTSP Link"
+        font_name: "BPoppins"
+        font_size: "13sp"
+        halign: "center"
+        pos_hint: {"center_y":.16}
+        color: rgba(135,133,193,255)
 
 
         '''
@@ -613,7 +621,7 @@ class Slope(MDApp):
         link = f"rtsp://{uname}:{password}@{ipaddress}:554"
         # cv = CvCamera()
         # cv.check()
-        # self.strng.get_screen('preview').ids.rtsp_link.text = link
+        self.strng.get_screen('preview2').ids.rtsp_link.text = link
         # self.camera_util(link)
 
         self.strng.get_screen('preview2').manager.current = 'preview2'
