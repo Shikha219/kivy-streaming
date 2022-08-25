@@ -415,7 +415,7 @@ screen_manager.add_widget(MainScreen(name = 'main'))
 screen_manager.add_widget(LoginScreen(name = 'login'))
 screen_manager.add_widget(SignupScreen(name = 'signup'))
 
-rtsp = [0]
+rtsp = ['rtsp://admin:123456@192.168.1.208:554']
 class Cam(Image):
     def on_kv_post(self, base_widget):
         # self.capture = cv.VideoCapture(0)
@@ -522,7 +522,7 @@ class Main(MDApp):
 
 
 if __name__ == "__main__":
-    LabelBase.register(name="MPoppins", fn_regular="D:/spyBound/fonts/Poppins-Medium.ttf")
-    LabelBase.register(name="BPoppins", fn_regular="D:/spyBound/fonts/Poppins-SemiBold.ttf")
+    LabelBase.register(name="MPoppins", fn_regular="D:/spyBound/fonts/fonts/Poppins-Medium.ttf")
+    LabelBase.register(name="BPoppins", fn_regular="D:/spyBound/fonts/fonts/Poppins-SemiBold.ttf")
 
     Main().run()
