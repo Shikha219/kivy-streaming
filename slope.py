@@ -43,7 +43,7 @@ ScreenManager:
             halign: "center"
             color: rgba(34,34,34,255)
         MDLabel:
-            text: "Best place to write life stories and share your journey experiences"
+            text: "Check yourself before you wreck yourself."
             font_name: "MPoppins"
             font_size: "13sp"
             size_hint_x: .85
@@ -514,7 +514,7 @@ screen_manager.add_widget(Preview2Screen(name = 'preview2'))
 class Cam(Image):
 
     def on_kv_post(self, base_widget):
-        self.capture = cv.VideoCapture(0)
+        self.capture = cv.VideoCapture('rtsp://admin:123456@192.168.1.208:554')
         # cv.namedWindow("CV2 Image")
         Clock.schedule_interval(self.update, 1.0 / 33.0)
 
@@ -537,7 +537,7 @@ class Cam(Image):
 
 
 
-class Slope(MDApp):
+class Spy_Bound(MDApp):
 
     global link
     link = 0
@@ -553,7 +553,7 @@ class Slope(MDApp):
         from firebase import firebase
 
         # Initialize Firebase
-        firebase = firebase.FirebaseApplication('https://spy-bound-59012-default-rtdb.firebaseio.com/', None)
+        # firebase = firebase.FirebaseApplication('https://spy-bound-59012-default-rtdb.firebaseio.com/', None)
 
         # Get Data
         result = firebase.get('spy-bound-59012-default-rtdb/Users','')
@@ -644,7 +644,7 @@ if __name__ == "__main__":
     LabelBase.register(name="MPoppins", fn_regular="D:/spyBound/fonts/Poppins-Medium.ttf")
     LabelBase.register(name="BPoppins", fn_regular="D:/spyBound/fonts/Poppins-SemiBold.ttf")
 
-    Slope().run()
+    Spy_Bound().run()
 
 
 
